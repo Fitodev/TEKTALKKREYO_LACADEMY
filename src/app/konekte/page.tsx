@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { AuthForm } from "@/components/auth-form";
 import { getSupabaseConfig, getAuthSiteOrigin, safeNext } from "@/lib/config";
 export const metadata = { title: "Kont ou, chemen ou." };
@@ -15,7 +16,15 @@ export default async function AuthPage({
         <p>Konekte pou jwenn espas aprantisaj ou.</p>
         {eta === "lyen" && (
           <p role="alert" className="error">
-            Lyen sa a pa valab oswa li ekspire. Mande yon nouvo lyen.
+            Lyen sa a pa valab oswa li ekspire.{" "}
+            <Link href="/bliye-modpas" style={{ textDecoration: "underline" }}>
+              Mande yon nouvo lyen rekiperasyon
+            </Link>{" "}
+            oswa{" "}
+            <Link href="/konfime-kont" style={{ textDecoration: "underline" }}>
+              yon nouvo imèl konfimasyon
+            </Link>
+            .
           </p>
         )}
         {eta === "google" && (

@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { requireUser } from "@/lib/auth";
 import { PasswordForm } from "@/components/password-form";
 export default async function Password() {
-  await requireUser();
+  await requireUser("/kont/modpas");
   return (
     <div className="container">
       <section className="form-panel">

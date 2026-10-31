@@ -76,3 +76,18 @@ it("uses the password page for recovery token hashes from email templates", asyn
     type: "recovery",
   });
 });
+
+it.each([
+  "error=access_denied&error_code=otp_expired",
+  "error=access_denied&type=recovery",
+  "error=access_denied&next=/kont/modpas",
+])(
+  "labels email recovery failures as invalid links, not Google failures: %s",
+  async (query) => {
+    const result = await GET(
+      new NextRequest("https://academy.example/auth/confirm?" + query),
+    );
+    expect(result.headers.get("location")).toBe("/konekte?eta=lyen");
+    expect(mocks.exchange).not.toHaveBeenCalled();
+  },
+);

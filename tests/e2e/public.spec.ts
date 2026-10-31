@@ -122,3 +122,27 @@ test("OAuth cancellation displays a safe error, without reflecting provider cont
     "untrusted-provider-content",
   );
 });
+
+test("expired email links offer actual recovery actions", async ({ page }) => {
+  await page.goto("/auth/confirm?error=access_denied&error_code=otp_expired");
+  await expect(page).toHaveURL(/konekte\?eta=lyen/);
+  const alert = page.getByRole("main").getByRole("alert");
+  await expect(alert).toContainText("Lyen sa a pa valab oswa li ekspire");
+  await expect(
+    alert.getByRole("link", { name: "Mande yon nouvo lyen rekiperasyon" }),
+  ).toHaveAttribute("href", "/bliye-modpas");
+  await expect(
+    alert.getByRole("link", { name: "yon nouvo imèl konfimasyon" }),
+  ).toHaveAttribute("href", "/konfime-kont");
+});
+test("password page returns to itself after required sign-in", async ({
+  page,
+}) => {
+  await page.goto("/kont/modpas");
+  await expect(page).toHaveURL(/konekte\?.*next=%2Fkont%2Fmodpas/);
+  await expect(
+    page
+      .getByRole("form", { name: "Kont avèk imèl" })
+      .locator('input[name="next"]'),
+  ).toHaveValue("/kont/modpas");
+});

@@ -58,3 +58,11 @@ Après ce scénario, les artefacts `.next` correspondent à l'instance locale. R
 - Scan : aucun secret détecté dans les fichiers de travail, l'historique accessible et les artefacts navigateur inspectés. Aucune valeur de clé ne figure dans ce rapport.
 
 La connexion locale fonctionne de bout en bout. La configuration et la livraison e-mail de production restent à finaliser avec les accès appropriés, sans désactiver les confirmations ou les RLS.
+
+## Contrôle complémentaire des retours de compte
+
+Corrigé : un lien e-mail expiré (`otp_expired`, récupération ou retour mot de passe) propose les liens de récupération et de renvoi de confirmation au lieu d'afficher une erreur Google. L'accès à `/kont/modpas` conserve maintenant cette destination lorsqu'une reconnexion est nécessaire, avec validation du chemin pour empêcher une redirection externe.
+
+Validation de ces corrections : 70 tests unitaires, 20 tests navigateur publics, build, lint, formatage et scan de secrets réussis. Les deux variantes du test de compte complet restent exclues de la suite publique et utilisent leur commande séparée ; elles n'ont pas été relancées pour cet incrément de navigation. Le précédent scénario Auth réel reste documenté ci-dessus.
+
+Le contrôle HTTP complémentaire de la page publiée `/enskri` et de 12 ressources statiques associées n'a détecté aucun motif de secret selon les signatures vérifiées. Aucun motif de clé publique Supabase n'a été trouvé sur ce périmètre. Cela ne couvre pas l'ensemble des déploiements et des réglages privés. Au moment du contrôle, l'inscription restait désactivée et l'API Vercel refusait le jeton avec `403 forbidden`, y compris hors sandbox. Les clés n'ont pas été déplacées dans Git pour contourner cet accès refusé.

@@ -1,14 +1,21 @@
 import "server-only";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { safeNext } from "@/lib/config";
 import { can, type Capability } from "@/lib/permissions";
-export async function requireUser() {
+export async function requireUser(returnTo?: string) {
+  const next = returnTo
+    ? `&next=${encodeURIComponent(safeNext(returnTo))}`
+    : "";
+  const login = returnTo
+    ? `/konekte?next=${encodeURIComponent(safeNext(returnTo))}`
+    : "/konekte";
   const supabase = await createClient();
-  if (!supabase) redirect("/konekte?eta=konfigirasyon");
+  if (!supabase) redirect(`/konekte?eta=konfigirasyon${next}`);
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/konekte");
+  if (!user) redirect(login);
   return { supabase, user };
 }
 export async function requireCapability(capability: Capability) {

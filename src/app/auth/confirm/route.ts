@@ -14,7 +14,13 @@ export async function GET(request: NextRequest) {
     return response;
   }
   const params = request.nextUrl.searchParams;
-  if (params.has("error")) return finish("/konekte?eta=google");
+  if (params.has("error")) {
+    const emailError =
+      params.get("error_code") === "otp_expired" ||
+      ["email", "signup", "recovery"].includes(params.get("type") ?? "") ||
+      params.get("next") === "/kont/modpas";
+    return finish(emailError ? "/konekte?eta=lyen" : "/konekte?eta=google");
+  }
   const next = safeNext(params.get("next"));
   const supabase = await createClient();
   const code = params.get("code"),
