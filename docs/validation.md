@@ -28,3 +28,7 @@ Les instructions `install_script` et `start_skill` et les trois noms de variable
 ## Incrément Google Auth et protection des clés
 
 Le socle Auth comprend désormais un bouton Google sur inscription et connexion, PKCE, validation des retours, cookies HttpOnly/Secure et contrôle des clés publiques avant build. Validation de cet incrément : **38 tests unitaires et 16 tests navigateur réussis**, build/lint/typecheck/formatage réussis, scan local sans secret détecté. La navigation OAuth est interceptée dans les tests, sans compte Google réel. Voir [le rapport ciblé](security-review-2026-10-31.md) pour le périmètre exact, les limites réseau et les contrôles restant à effectuer sur le site publié.
+
+## Incrément backend des comptes
+
+Inscription, confirmation, connexion, déconnexion, récupération et changement de mot de passe ont été exercés sur une instance Supabase et une boîte mail locales réelles, jusqu'au refus de l'ancien mot de passe et à l'accès privé avec le nouveau. 62 tests unitaires, 27 assertions SQL, deux contrôles de backfill et 16 tests navigateur publics passent. Le scénario de compte passe via sa commande isolée ; les variantes correspondantes sont ignorées dans la suite publique habituelle. Voir [auth-backend.md](auth-backend.md) pour les réglages de production requis et les limites d'accès Vercel/Supabase observées.

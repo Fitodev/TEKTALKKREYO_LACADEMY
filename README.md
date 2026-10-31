@@ -57,3 +57,7 @@ Le bouton Google est disponible dans les formulaires, via Supabase PKCE côté s
 `npm run security:audit` vérifie les fichiers locaux, l’historique accessible et les artefacts navigateur. Le prébuild bloque les clés privilégiées dans les variables publiques. Consulter le [rapport ciblé et ses limites](docs/security-review-2026-10-31.md).
 
 Les fichiers `.env*` (sauf `.env.example` sans clés), certificats/clés privées, fichiers de comptes de service, dossiers `secrets/` et `.vercel/` sont exclus de Git et du contexte Docker. `.gitignore` ne retire pas un fichier déjà suivi : le contrôle de sécurité refuse également les chemins de credentials déjà indexés. Les valeurs réelles restent dans les réglages sécurisés Vercel/Supabase, jamais dans le fichier `.gitignore` lui-même.
+
+## Backend des comptes
+
+Inscription, confirmation/renvoi d’e-mail, connexion, récupération et modification du mot de passe disposent maintenant d’un [guide de configuration et de tests réels](docs/auth-backend.md). Utiliser `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` et `SITE_URL` côté serveur ; les anciens noms publics restent compatibles. `npm run test:accounts` vérifie le parcours sur une instance Supabase et une boîte mail locales, sans compte réel. La base hébergée doit recevoir les migrations et Vercel doit avoir ses propres variables de configuration.

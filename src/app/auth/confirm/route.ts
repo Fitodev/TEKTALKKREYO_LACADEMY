@@ -22,8 +22,13 @@ export async function GET(request: NextRequest) {
     type = params.get("type");
   if (supabase) {
     if (code) {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (!error) return finish(next);
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+      if (!error)
+        return finish(
+          data && "redirectType" in data && data.redirectType === "recovery"
+            ? "/kont/modpas"
+            : next,
+        );
     }
     if (
       tokenHash &&
@@ -33,7 +38,7 @@ export async function GET(request: NextRequest) {
         token_hash: tokenHash,
         type,
       });
-      if (!error) return finish(next);
+      if (!error) return finish(type === "recovery" ? "/kont/modpas" : next);
     }
   }
   return finish("/konekte?eta=lyen");

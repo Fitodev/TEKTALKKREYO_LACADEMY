@@ -52,3 +52,27 @@ it("does not grant a session when code exchange fails", async () => {
   );
   expect(result.headers.get("location")).toBe("/konekte?eta=lyen");
 });
+
+it("uses the password page for PKCE recovery even without a next parameter", async () => {
+  mocks.exchange.mockResolvedValue({
+    data: { redirectType: "recovery" },
+    error: null,
+  });
+  const result = await GET(
+    new NextRequest("https://academy.example/auth/confirm?code=recovery-code"),
+  );
+  expect(result.headers.get("location")).toBe("/kont/modpas");
+});
+it("uses the password page for recovery token hashes from email templates", async () => {
+  mocks.verifyOtp.mockResolvedValue({ data: { user: {} }, error: null });
+  const result = await GET(
+    new NextRequest(
+      "https://academy.example/auth/confirm?token_hash=recovery-hash&type=recovery",
+    ),
+  );
+  expect(result.headers.get("location")).toBe("/kont/modpas");
+  expect(mocks.verifyOtp).toHaveBeenCalledWith({
+    token_hash: "recovery-hash",
+    type: "recovery",
+  });
+});

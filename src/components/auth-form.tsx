@@ -1,10 +1,10 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { credentialsSchema, emailSchema } from "@/lib/validation";
+import { credentialsSchema, emailSchema, loginSchema } from "@/lib/validation";
 import { authenticate, type AuthState } from "@/app/auth/actions";
 import { GoogleAuthForm } from "@/components/google-auth-form";
 import { Button } from "@/components/ui/button";
@@ -16,12 +16,17 @@ const labels = {
 export function AuthForm({
   mode,
   configured,
+  returnTo = "/tablo-bod",
   googleConfigured = configured,
 }: {
   mode: "login" | "signup" | "reset";
   configured: boolean;
+  returnTo?: string;
   googleConfigured?: boolean;
 }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [state, action, pending] = useActionState<AuthState, FormData>(
     authenticate.bind(null, mode),
     {},
@@ -35,12 +40,17 @@ export function AuthForm({
     .superRefine((data, ctx) => {
       if (
         mode !== "reset" &&
-        !credentialsSchema.shape.password.safeParse(data.password).success
+        !(
+          mode === "login" ? loginSchema : credentialsSchema
+        ).shape.password.safeParse(data.password).success
       )
         ctx.addIssue({
           code: "custom",
           path: ["password"],
-          message: "Modpas la dwe gen omwen 12 karaktè.",
+          message:
+            mode === "login"
+              ? "Antre modpas ou."
+              : "Modpas la dwe gen omwen 12 karaktè.",
         });
       if (
         mode === "signup" &&
@@ -64,7 +74,8 @@ export function AuthForm({
           <p className="auth-divider">oswa avèk adrès imèl ou</p>
         </>
       )}
-      <form action={action}>
+      <form action={action} aria-label="Kont avèk imèl">
+        <input type="hidden" name="next" value={returnTo} />
         {mode === "signup" && (
           <div className="field">
             <label htmlFor="displayName">Non ou</label>
@@ -74,7 +85,10 @@ export function AuthForm({
               required
               minLength={2}
               maxLength={80}
-              {...register("displayName")}
+              value={displayName}
+              {...register("displayName", {
+                onChange: (event) => setDisplayName(event.target.value),
+              })}
             />
             {errors.displayName && (
               <p className="error">{String(errors.displayName.message)}</p>
@@ -89,7 +103,10 @@ export function AuthForm({
             autoComplete="email"
             required
             maxLength={254}
-            {...register("email")}
+            value={email}
+            {...register("email", {
+              onChange: (event) => setEmail(event.target.value),
+            })}
           />
           {errors.email && (
             <p className="error">{String(errors.email.message)}</p>
@@ -105,13 +122,18 @@ export function AuthForm({
                 mode === "login" ? "current-password" : "new-password"
               }
               required
-              minLength={12}
+              minLength={mode === "login" ? 1 : 12}
               maxLength={128}
               aria-describedby="password-help"
-              {...register("password")}
+              value={password}
+              {...register("password", {
+                onChange: (event) => setPassword(event.target.value),
+              })}
             />
             <small id="password-help">
-              Omwen 12 karaktè. Chwazi yon modpas ou pa itilize lòt kote.
+              {mode === "login"
+                ? "Antre modpas kont ou."
+                : "Omwen 12 karaktè. Chwazi yon modpas ou pa itilize lòt kote."}
             </small>
             {errors.password && (
               <p className="error">{String(errors.password.message)}</p>
@@ -145,6 +167,13 @@ export function AuthForm({
         {state.message && (
           <p role="status" className="notice">
             {state.message}
+          </p>
+        )}
+        {state.confirmationRequired && (
+          <p>
+            <Link href="/konfime-kont" style={{ textDecoration: "underline" }}>
+              Voye imèl konfimasyon an ankò
+            </Link>
           </p>
         )}
         {!configured && (

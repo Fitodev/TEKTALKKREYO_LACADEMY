@@ -6,6 +6,8 @@ insert into auth.users(id,raw_user_meta_data) values
  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','{"display_name":"Elèv B"}'),
  ('eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee','{"display_name":"Editè"}'),
  ('dddddddd-dddd-4ddd-8ddd-dddddddddddd','{"display_name":"Admin"}');
+insert into auth.users(id,raw_user_meta_data) values ('cccccccc-cccc-4ccc-8ccc-cccccccccccc','{"full_name":"Elèv Google","role":"admin"}');
+select pg_temp.assert_true((select display_name='Elèv Google' and role='student' from public.profiles where id='cccccccc-cccc-4ccc-8ccc-cccccccccccc'),'Google-style account gets a student profile, never its requested role');
 update public.profiles set role='editor' where id='eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee';
 update public.profiles set role='admin' where id='dddddddd-dddd-4ddd-8ddd-dddddddddddd';
 select pg_temp.assert_true((select role='student' from public.profiles where id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'),'signup ignores user-supplied role');

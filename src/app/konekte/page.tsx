@@ -1,12 +1,12 @@
 import { AuthForm } from "@/components/auth-form";
-import { getSupabaseConfig, getAuthSiteOrigin } from "@/lib/config";
+import { getSupabaseConfig, getAuthSiteOrigin, safeNext } from "@/lib/config";
 export const metadata = { title: "Kont ou, chemen ou." };
 export default async function AuthPage({
   searchParams,
 }: {
-  searchParams: Promise<{ eta?: string }>;
+  searchParams: Promise<{ eta?: string; next?: string }>;
 }) {
-  const { eta } = await searchParams;
+  const { eta, next } = await searchParams;
   return (
     <div className="container">
       <section className="form-panel">
@@ -23,8 +23,10 @@ export default async function AuthPage({
             Koneksyon Google la pa reyisi oswa ou anile li. Ou ka eseye ankò.
           </p>
         )}
+        {eta === "dekonekte" && <p role="status">Ou dekonekte.</p>}
         <AuthForm
           mode="login"
+          returnTo={safeNext(next ?? null)}
           configured={!!getSupabaseConfig()}
           googleConfigured={!!getSupabaseConfig() && !!getAuthSiteOrigin()}
         />

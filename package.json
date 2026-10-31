@@ -16,7 +16,8 @@
     "db:start": "supabase start",
     "prebuild": "node scripts/check-public-env.mjs --production",
     "predev": "node scripts/check-public-env.mjs",
-    "security:audit": "node scripts/audit-secrets.mjs"
+    "security:audit": "node scripts/audit-secrets.mjs",
+    "test:accounts": "node scripts/test-account-flow.mjs"
   },
   "dependencies": {
     "next": "^16.0.0",

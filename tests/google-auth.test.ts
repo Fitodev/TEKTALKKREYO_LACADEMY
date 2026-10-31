@@ -173,3 +173,23 @@ it("rejects credentials embedded in a public project URL", () => {
   );
   expect(getSupabaseConfig()).toBeNull();
 });
+
+it("supports server-only Auth configuration without requiring public variable names", () => {
+  vi.stubEnv("SUPABASE_URL", "https://server-project.supabase.co");
+  const key = "sb_publishable_" + "server".repeat(8);
+  vi.stubEnv("SUPABASE_PUBLISHABLE_KEY", key);
+  expect(getSupabaseConfig()).toEqual({
+    url: "https://server-project.supabase.co",
+    key,
+  });
+});
+it("accepts the standard legacy anon environment variable", () => {
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
+  const key = "sb_publishable_" + "legacy".repeat(8);
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY", key);
+  expect(getSupabaseConfig()?.key).toBe(key);
+});
+it("refuses a privileged server Auth key rather than falling back to user-bypassing privileges", () => {
+  vi.stubEnv("SUPABASE_PUBLISHABLE_KEY", "sb_secret_" + "invalid".repeat(8));
+  expect(getSupabaseConfig()).toBeNull();
+});
