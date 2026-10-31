@@ -9,3 +9,21 @@ test-results/
 *.tsbuildinfo
 supabase/.temp/
 supabase/.branches/
+
+# Local credentials and deployment state. Keep actual values in secure settings.
+.vercel/
+.secrets/
+secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+credentials.json
+*-credentials.json
+service-account*.json
+*-service-account.json
+.npmrc
+.pypirc
+.netrc

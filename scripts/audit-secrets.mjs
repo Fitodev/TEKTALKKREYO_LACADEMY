@@ -22,6 +22,25 @@ function inspect(label, text) {
     }
   }
 }
+// Ignore rules do not untrack files: explicitly reject credential paths already in Git.
+const tracked = execFileSync("git", ["ls-files", "-z"], { encoding: "utf8" })
+  .split("\0")
+  .filter(Boolean);
+for (const file of tracked) {
+  const base = file.split("/").pop() ?? "";
+  const sensitive =
+    (/^\.env(?:$|[.-])/.test(base) && base !== ".env.example") ||
+    /(?:^|\/)(?:\.vercel|\.secrets|secrets)(?:\/|$)/.test(file) ||
+    /\.(?:pem|key|p12|pfx|jks|keystore)$/i.test(base) ||
+    /^(?:credentials\.json|.*-credentials\.json|service-account.*\.json|.*-service-account\.json|\.npmrc|\.pypirc|\.netrc)$/i.test(
+      base,
+    );
+  if (sensitive)
+    findings.push({
+      location: `tracked file: ${file}`,
+      kind: "credential file tracked despite ignore policy",
+    });
+}
 const files = execFileSync(
   "git",
   ["ls-files", "-z", "--cached", "--others", "--exclude-standard"],
