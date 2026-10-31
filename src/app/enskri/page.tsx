@@ -1,5 +1,5 @@
 import { AuthForm } from "@/components/auth-form";
-import { getSupabaseConfig } from "@/lib/config";
+import { getSupabaseConfig, getAuthSiteOrigin } from "@/lib/config";
 export const metadata = { title: "Premye etap la kòmanse la a." };
 export default async function AuthPage({
   searchParams,
@@ -18,7 +18,11 @@ export default async function AuthPage({
             Lyen sa a pa valab oswa li ekspire. Mande yon nouvo lyen.
           </p>
         )}
-        <AuthForm mode="signup" configured={!!getSupabaseConfig()} />
+        <AuthForm
+          mode="signup"
+          configured={!!getSupabaseConfig()}
+          googleConfigured={!!getSupabaseConfig() && !!getAuthSiteOrigin()}
+        />
       </section>
     </div>
   );

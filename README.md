@@ -49,3 +49,9 @@ Les tests Auth/SMTP/MFA de bout en bout sur une vraie instance, Lighthouse mobil
 - [Guide administrateur](docs/admin-guide.md)
 - [Guide utilisateur](docs/user-guide.md)
 - [Déploiement](docs/deployment.md)
+
+## Connexion Google et contrôle des clés
+
+Le bouton Google est disponible dans les formulaires, via Supabase PKCE côté serveur. Activer le fournisseur et régler les retours dans les consoles avant usage réel : [guide Google Auth](docs/google-auth.md). Utiliser `SITE_URL` pour l’origine serveur de production. Les secrets Google restent dans Supabase.
+
+`npm run security:audit` vérifie les fichiers locaux, l’historique accessible et les artefacts navigateur. Le prébuild bloque les clés privilégiées dans les variables publiques. Consulter le [rapport ciblé et ses limites](docs/security-review-2026-10-31.md).

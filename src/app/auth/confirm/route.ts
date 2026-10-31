@@ -2,7 +2,19 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { safeNext } from "@/lib/config";
 export async function GET(request: NextRequest) {
+  // Codes and token hashes must never be cached or sent to third-party referrers.
+  function finish(path: string) {
+    // A relative Location preserves the browser origin behind Vercel/proxies.
+    const response = new NextResponse(null, {
+      status: 303,
+      headers: { Location: path },
+    });
+    response.headers.set("Cache-Control", "private, no-store");
+    response.headers.set("Referrer-Policy", "no-referrer");
+    return response;
+  }
   const params = request.nextUrl.searchParams;
+  if (params.has("error")) return finish("/konekte?eta=google");
   const next = safeNext(params.get("next"));
   const supabase = await createClient();
   const code = params.get("code"),
@@ -11,7 +23,7 @@ export async function GET(request: NextRequest) {
   if (supabase) {
     if (code) {
       const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (!error) return NextResponse.redirect(new URL(next, request.url));
+      if (!error) return finish(next);
     }
     if (
       tokenHash &&
@@ -21,8 +33,8 @@ export async function GET(request: NextRequest) {
         token_hash: tokenHash,
         type,
       });
-      if (!error) return NextResponse.redirect(new URL(next, request.url));
+      if (!error) return finish(next);
     }
   }
-  return NextResponse.redirect(new URL("/konekte?eta=lyen", request.url));
+  return finish("/konekte?eta=lyen");
 }

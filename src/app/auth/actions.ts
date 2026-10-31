@@ -1,4 +1,5 @@
 "use server";
+import { getAuthSiteOrigin } from "@/lib/config";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { credentialsSchema, signupSchema, emailSchema } from "@/lib/validation";
@@ -27,7 +28,7 @@ export async function authenticate(
         : credentialsSchema;
   const parsed = schema.safeParse(raw);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  const siteUrl = getAuthSiteOrigin();
   if (mode === "login") {
     const result = await supabase.auth.signInWithPassword({
       email: String(raw.email),

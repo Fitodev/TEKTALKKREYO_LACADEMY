@@ -24,3 +24,7 @@ Aucune instance Supabase ni configuration SMTP réelle n'est connectée. Les for
 Le CMS, les leçons complètes, le lecteur de contenu, les examens, les devoirs, la progression et les certificats ne sont pas livrés. Les 40 entrées sont un plan en brouillon. Pas de lien affilié ni de vidéo inventés. La revue linguistique humaine, l'accessibilité manuelle, Lighthouse, la sécurité opérationnelle et la restauration des sauvegardes restent à réaliser avant lancement.
 
 Les instructions `install_script` et `start_skill` et les trois noms de variables de configuration ont été sauvegardés dans le brouillon cloud. Cela ne publie pas l'environnement ni le site. Aucun commit, push ou déploiement public n'a été effectué.
+
+## Incrément Google Auth et protection des clés
+
+Le socle Auth comprend désormais un bouton Google sur inscription et connexion, PKCE, validation des retours, cookies HttpOnly/Secure et contrôle des clés publiques avant build. Validation de cet incrément : **38 tests unitaires et 16 tests navigateur réussis**, build/lint/typecheck/formatage réussis, scan local sans secret détecté. La navigation OAuth est interceptée dans les tests, sans compte Google réel. Voir [le rapport ciblé](security-review-2026-10-31.md) pour le périmètre exact, les limites réseau et les contrôles restant à effectuer sur le site publié.

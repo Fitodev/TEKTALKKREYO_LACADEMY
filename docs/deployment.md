@@ -29,3 +29,7 @@ Terminer TLS au reverse proxy, activer HSTS en HTTPS, contrôler Host/origines e
 ## Validation et publication
 
 Exécuter les vérifications du README, des parcours Auth complets avec comptes fictifs, les tests HTTP RLS et une restauration de sauvegarde. Finaliser les pages légales et relire le créole. Les tests locaux SQL ne suffisent pas à déclarer Supabase Auth prêt. Publication et déploiement sont des étapes distinctes ; aucun déploiement public n'est effectué par la création de ce dépôt.
+
+## Connexion Google
+
+Configurer le fournisseur et ses deux URL de retour selon [google-auth.md](google-auth.md). Définir `SITE_URL` côté serveur pour les liens Auth et conserver les clés privilégiées hors des variables publiques. Les cookies Auth sont exclusivement utilisés côté serveur et HttpOnly. Le prébuild refuse les clés Supabase privilégiées.

@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { credentialsSchema, emailSchema } from "@/lib/validation";
 import { authenticate, type AuthState } from "@/app/auth/actions";
+import { GoogleAuthForm } from "@/components/google-auth-form";
 import { Button } from "@/components/ui/button";
 const labels = {
   login: "Konekte",
@@ -15,9 +16,11 @@ const labels = {
 export function AuthForm({
   mode,
   configured,
+  googleConfigured = configured,
 }: {
   mode: "login" | "signup" | "reset";
   configured: boolean;
+  googleConfigured?: boolean;
 }) {
   const [state, action, pending] = useActionState<AuthState, FormData>(
     authenticate.bind(null, mode),
@@ -55,6 +58,12 @@ export function AuthForm({
   } = useForm({ resolver: zodResolver(schema), mode: "onBlur" });
   return (
     <>
+      {mode !== "reset" && (
+        <>
+          <GoogleAuthForm mode={mode} configured={googleConfigured} />
+          <p className="auth-divider">oswa avèk adrès imèl ou</p>
+        </>
+      )}
       <form action={action}>
         {mode === "signup" && (
           <div className="field">

@@ -13,7 +13,10 @@
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "db:test": "bash scripts/test-db.sh",
-    "db:start": "supabase start"
+    "db:start": "supabase start",
+    "prebuild": "node scripts/check-public-env.mjs --production",
+    "predev": "node scripts/check-public-env.mjs",
+    "security:audit": "node scripts/audit-secrets.mjs"
   },
   "dependencies": {
     "next": "^16.0.0",

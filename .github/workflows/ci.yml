@@ -7,8 +7,15 @@ permissions:
 jobs:
   application:
     runs-on: ubuntu-latest
+    # Synthetic public configuration: the OAuth navigation is intercepted by Playwright.
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://oauth.example.test
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_e2eFixtureNotARealKey
+      SITE_URL: http://127.0.0.1:3000
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -19,6 +26,7 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - run: npm run security:audit
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4

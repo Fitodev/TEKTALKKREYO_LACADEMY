@@ -14,6 +14,16 @@ export default function Page() {
           ou, otantifikasyon ou ak non ou chwazi a. Pa antre enfòmasyon sansib
           nan non pwofil ou.
         </p>
+        <h2>Koneksyon avèk Google</h2>
+        <p>
+          Si ou chwazi Google, Supabase sèvi ak idantite Google ou pou kreye yon
+          kont oswa konekte ou. Nou mande sèlman adrès imèl ak enfòmasyon pwofil
+          debaz. Nou pa mande aksè ak Drive, Gmail oswa lòt dokiman ou yo.
+        </p>
+        <p>
+          Ou pa bezwen bay akademi an modpas Google ou. Sekrè teknik ki konekte
+          sèvis Google ak Supabase pa dwe parèt nan paj piblik yo.
+        </p>
         <h2>Bonbon ak mezi odyans</h2>
         <p>
           Sesyon koneksyon an sèvi ak bonbon ki nesesè pou kont ou. Vèsyon sa a

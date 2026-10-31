@@ -74,8 +74,51 @@ test("small screens keep content readable and unconfigured accounts are explicit
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await expect(page.getByText(/Sèvis kont lan poko disponib/)).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Kreye kont mwen" }),
-  ).toBeDisabled();
+  const google = page.getByRole("button", { name: "Kontinye avèk Google" });
+  await expect(google).toBeVisible();
+  const unavailable = page.getByText(/Sèvis kont lan poko disponib/);
+  if (await unavailable.isVisible()) {
+    await expect(
+      page.getByRole("button", { name: "Kreye kont mwen" }),
+    ).toBeDisabled();
+    await expect(google).toBeDisabled();
+  } else {
+    await expect(
+      page.getByRole("button", { name: "Kreye kont mwen" }),
+    ).toBeEnabled();
+  }
+});
+
+test("Google registration requires consent before redirecting", async ({
+  page,
+}) => {
+  await page.goto("/enskri");
+  const form = page.getByRole("form", { name: "Koneksyon avèk Google" });
+  await expect(form.getByRole("checkbox")).not.toBeChecked();
+  const button = form.getByRole("button", { name: "Kontinye avèk Google" });
+  await expect(button).toBeVisible();
+  if (await button.isEnabled()) {
+    await button.click();
+    await expect(page).toHaveURL(/\/enskri$/);
+    expect(
+      await form
+        .getByRole("checkbox")
+        .evaluate((input: HTMLInputElement) => input.validity.valueMissing),
+    ).toBe(true);
+  }
+});
+
+test("OAuth cancellation displays a safe error, without reflecting provider content", async ({
+  page,
+}) => {
+  await page.goto(
+    "/auth/confirm?error=access_denied&error_description=untrusted-provider-content",
+  );
+  await expect(page).toHaveURL(/konekte\?eta=google/);
+  await expect(page.getByRole("main").getByRole("alert")).toContainText(
+    "Koneksyon Google la pa reyisi",
+  );
+  await expect(page.locator("body")).not.toContainText(
+    "untrusted-provider-content",
+  );
 });

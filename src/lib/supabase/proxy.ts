@@ -6,6 +6,12 @@ export async function refreshSession(request: NextRequest) {
   let response = NextResponse.next({ request });
   if (!config) return response;
   const supabase = createServerClient(config.url, config.key, {
+    cookieOptions: {
+      sameSite: "lax",
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+    },
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll(values) {
