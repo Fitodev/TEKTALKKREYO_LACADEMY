@@ -1,0 +1,56 @@
+{
+  "name": "tektalkkreyol-academy",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 0.0.0.0",
+    "build": "next build --webpack",
+    "start": "node scripts/start.mjs",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "db:test": "bash scripts/test-db.sh",
+    "db:start": "supabase start"
+  },
+  "dependencies": {
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.80.0",
+    "zod": "^4.1.0",
+    "react-hook-form": "^7.66.0",
+    "@hookform/resolvers": "^5.2.0",
+    "lucide-react": "^0.468.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.3.0",
+    "@radix-ui/react-slot": "^1.2.3",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.0",
+    "@tailwindcss/postcss": "^4.1.0",
+    "eslint": "^9.39.0",
+    "eslint-config-next": "^16.0.0",
+    "prettier": "^3.6.0",
+    "vitest": "^4.0.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/jest-dom": "^6.9.0",
+    "jsdom": "^27.0.0",
+    "@playwright/test": "^1.56.0",
+    "@axe-core/playwright": "^4.11.0",
+    "supabase": "^2.58.0"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0 <25"
+  }
+}
